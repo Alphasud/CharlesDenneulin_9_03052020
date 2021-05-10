@@ -18,7 +18,10 @@ export default class NewBill {
   handleChangeFile = e => {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const fileName = filePath[filePath.length - 1]
+    const extensionRegex = /(png|jpg|jpeg)/g
+    const getExtension = fileName.split('.').pop()
+    const sameExtention = getExtension.toLowerCase().match(extensionRegex)
     this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
@@ -26,11 +29,15 @@ export default class NewBill {
       .then(snapshot => snapshot.ref.getDownloadURL())
       .then(url => {
         this.fileUrl = url
-        this.fileName = fileName
+        this.fileName = sameExtention ? fileName : 'Invalid'
       })
   }
   handleSubmit = e => {
     e.preventDefault()
+    if (this.fileName === 'Invalid') {
+      console.log('Invalid file extension')
+      return;
+     }
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
