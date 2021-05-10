@@ -71,6 +71,12 @@ export default class {
     this.document = document
     this.onNavigate = onNavigate
     this.firestore = firestore
+    this.listsOpeningState = {
+      listIsOpen1: false,
+      listIsOpen2: false,
+      listIsOpen3: false,
+    }
+
     $('#arrow-icon1').click((e) => this.handleShowTickets(e, bills, 1))
     $('#arrow-icon2').click((e) => this.handleShowTickets(e, bills, 2))
     $('#arrow-icon3').click((e) => this.handleShowTickets(e, bills, 3))
@@ -95,7 +101,6 @@ export default class {
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
     } else {
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
@@ -103,7 +108,6 @@ export default class {
         <div id="big-billed-icon"> ${BigBilledIcon} </div>
       `)
       $('.vertical-navbar').css({ height: '120vh' })
-      this.counter ++
     }
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
@@ -114,7 +118,7 @@ export default class {
     const newBill = {
       ...bill,
       status: 'accepted',
-      commentAdmin: $('#commentary2').val()
+      commentAdmin: $('#commentary2').val(),
     }
     this.updateBill(newBill)
     this.onNavigate(ROUTES_PATH['Dashboard'])
@@ -124,30 +128,42 @@ export default class {
     const newBill = {
       ...bill,
       status: 'refused',
-      commentAdmin: $('#commentary2').val()
+      commentAdmin: $('#commentary2').val(),
     }
     this.updateBill(newBill)
     this.onNavigate(ROUTES_PATH['Dashboard'])
   }
 
   handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0
     if (this.index === undefined || this.index !== index) this.index = index
-    if (this.counter % 2 === 0) {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
-    } else {
+
+    if (this.listsOpeningState[`listIsOpen${index}`]) {
+      
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
       $(`#status-bills-container${this.index}`)
         .html("")
-      this.counter ++
+      this.listsOpeningState[`listIsOpen${index}`] = false
+
+    } else {
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
+      $(`#status-bills-container${this.index}`)
+        .html(cards(filteredBills(bills, getStatus(this.index))))
+      this.listsOpeningState[`listIsOpen${index}`] = true
     }
 
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
+    if (
+      !this.listsOpeningState.listIsOpen1 &&
+      !this.listsOpeningState.listIsOpen2 &&
+      !this.listsOpeningState.listIsOpen3
+    ) {
+      $(".dashboard-right-container div").html(`
+        <div id="big-billed-icon"> ${BigBilledIcon} </div>
+      `);
+      $(".vertical-navbar").css({ height: "120vh" });
+    }
 
     return bills
 
