@@ -2,6 +2,7 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
 
+
 export default class NewBill {
   constructor({ document, onNavigate, firestore, localStorage }) {
     this.document = document
@@ -22,16 +23,20 @@ export default class NewBill {
     const extensionRegex = /(png|jpg|jpeg)/g
     const getExtension = fileName.split('.').pop()
     const sameExtention = getExtension.toLowerCase().match(extensionRegex)
-    this.firestore
+    if (this.firestore) {
+      this.firestore
       .storage
-      .ref(`justificatifs/${fileName}`)
-      .put(file)
-      .then(snapshot => snapshot.ref.getDownloadURL())
-      .then(url => {
-        this.fileUrl = url
-        this.fileName = sameExtention ? fileName : 'Invalid'
-      })
+        .ref(`justificatifs/${fileName}`)
+        .put(file)
+        .then(snapshot => snapshot.ref.getDownloadURL())
+        .then(url => {
+          this.fileUrl = url
+          this.fileName = sameExtention ? fileName : 'Invalid'
+        })
+    }
   }
+  
+
   handleSubmit = e => {
     e.preventDefault()
     if (this.fileName === 'Invalid') {

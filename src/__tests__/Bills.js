@@ -69,15 +69,15 @@ describe("Given I am connected as an employee", () => {
           type: "Employee",
         })
       );
-      const html = BillsUI({ data: bills });
+      const html = BillsUI({ data: bills })
 
-      document.body.innerHTML = html;
+      document.body.innerHTML = html
 
       const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname });
+        document.body.innerHTML = ROUTES({ pathname })
       };
 
-      const firestore = null;
+      const firestore = null
 
       const allBills = new Bills({
         document,
@@ -86,18 +86,18 @@ describe("Given I am connected as an employee", () => {
         localStorage: window.localStorage,
       });
 
-      $.fn.modal = jest.fn();
+      $.fn.modal = jest.fn()
 
-      const iconEye = screen.getAllByTestId("icon-eye")[0];
+      const iconEye = screen.getAllByTestId("icon-eye")[0]
       
       const handleClickIconEye = jest.fn(() =>
         allBills.handleClickIconEye(iconEye)
       );
-      iconEye.addEventListener("click", handleClickIconEye);
-      fireEvent.click(iconEye);
-      expect(handleClickIconEye).toHaveBeenCalled();
-      const modal = document.getElementById("modaleFile");
-      expect(modal).toBeTruthy();
+      iconEye.addEventListener("click", handleClickIconEye)
+      fireEvent.click(iconEye)
+      expect(handleClickIconEye).toHaveBeenCalled()
+      const modal = document.getElementById("modaleFile")
+      expect(modal).toBeTruthy()
     })
   })
 
