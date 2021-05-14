@@ -50,7 +50,7 @@ describe("Given I am connected as an employee", () => {
       expect(inputFile.files[0].name).toBe('test.png')
     })
   })
- 
+  
   
   ////TEST FOR handleSubmit with wrong file extension
   describe('When I am on NewBill Page and I submit a form that contains an image with the wrong extension, the file is name invalid', () => {

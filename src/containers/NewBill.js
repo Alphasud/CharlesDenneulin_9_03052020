@@ -31,7 +31,16 @@ export default class NewBill {
         .then(snapshot => snapshot.ref.getDownloadURL())
         .then(url => {
           this.fileUrl = url
-          this.fileName = sameExtention ? fileName : 'Invalid'
+          if (sameExtention) {
+            this.fileName = fileName
+          } else {
+            this.fileName = 'Invalid'
+            const errmsg = document.createElement('SPAN')
+            errmsg.style.color = '#ff0000'
+            const input = document.querySelector('#input')
+            errmsg.innerHTML = 'Seulement jpg, jpeg ou png.'
+            input.insertAdjacentElement('afterend', errmsg)
+          }
         })
     }
   }
